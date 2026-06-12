@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UBS / UBC adatlap</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --surface2: #f1efe8;
+      --border: rgba(0,0,0,0.12);
+      --border2: rgba(0,0,0,0.22);
+      --text: #1a1a18;
+      --text2: #5f5e5a;
+      --accent: #185FA5;
+      --accent-light: #E6F1FB;
+      --accent-dark: #0C447C;
+      --danger: #A32D2D;
+      --danger-light: #FCEBEB;
+      --danger-border: #F09595;
+      --input-bg: #f1efe8;
+      --section-bg: #185FA5;
+      --section-color: #E6F1FB;
+    }
+
+    body.dark {
+      --bg: #1a1a18;
+      --surface: #26261f;
+      --surface2: #2c2c2a;
+      --border: rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.18);
+      --text: #f1efe8;
+      --text2: #b4b2a9;
+      --accent: #378ADD;
+      --accent-light: #042C53;
+      --accent-dark: #B5D4F4;
+      --danger: #F09595;
+      --danger-light: #2a1010;
+      --danger-border: #A32D2D;
+      --input-bg: #2c2c2a;
+      --section-bg: #0C447C;
+      --section-color: #B5D4F4;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.25s, color 0.25s;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      padding: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+      padding-top: 0.5rem;
+    }
+
+    .header-icon {
+      font-size: 22px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .toggle-btn {
+      background: var(--surface2);
+      border: 0.5px solid var(--border2);
+      border-radius: 50px;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text2);
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .toggle-btn:active { transform: scale(0.96); }
+
+    .date-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .date-row label {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .date-row input,
+    .date-row select {
+      font-size: 13px;
+      background: var(--input-bg);
+      border: 0.5px solid var(--border2);
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: var(--text);
+      outline: none;
+      transition: background 0.25s;
+    }
+
+    .section-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .section-title {
+      background: var(--section-bg);
+      color: var(--section-color);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 16px;
+      letter-spacing: 0.03em;
+      transition: background 0.25s;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .field-row:last-child { border-bottom: none; }
+
+    .field-label {
+      font-size: 14px;
+      color: var(--text2);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .field-input {
+      width: 115px;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--input-bg);
+      border: 0.5px solid var(--border2);
+      border-radius: 8px;
+      padding: 6px 10px;
+      text-align: right;
+      outline: none;
+      flex-shrink: 0;
+      transition: background 0.25s, border-color 0.2s;
+    }
+
+    .field-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.15);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 1.25rem;
+      padding-bottom: 2rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid var(--border2);
+      background: var(--surface);
+      color: var(--text);
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .btn-primary:active { background: var(--accent-dark); }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: var(--danger-border);
+    }
+
+    .btn-danger:active { background: var(--danger-light); }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--accent-light);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+      z-index: 99;
+    }
+
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header">
+    <span class="header-icon">📋</span>
+    <h1>UBS / UBC adatlap</h1>
+    <button class="toggle-btn" onclick="toggleDark()" id="modeBtn" aria-label="Mód váltás">
+      <span id="modeIcon">🌙</span>
+      <span id="modeLabel">Sötét</span>
+    </button>
+  </div>
+
+  <div class="date-row">
+    <label>Dátum:</label>
+    <input type="date" id="datum" />
+    <label>Műszak:</label>
+    <select id="muszak">
+      <option>Délelőtt</option>
+      <option>Délután</option>
+      <option>Éjszaka</option>
+    </select>
+  </div>
+
+  <div id="form-root"></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" onclick="mentes()">
+      ⬇ Mentés
+    </button>
+    <button class="btn btn-danger" onclick="torol()">
+      ✕ Törlés
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Szekciók és mezők ────────────────────────────────────────────
+  // Ha új mezőt akarsz hozzáadni, csak írj be egy új sort a fields tömbébe.
+  // Ha új szekciót akarsz, másolj egy {} blokkot és add hozzá a tömbhöz.
+  const sections = [
+    {
+      title: "UBS 1",
+      fields: [
+        "Anyagnyomás",
+        "Hőmérséklet",
+        "RAM A mennyisége",
+        "RAM B mennyisége",
+        "Szűrő előtti nyomás",
+        "Szűrő utáni nyomás",
+        "RAM A nyomás",
+        "RAM B nyomás"
+      ]
+    },
+    {
+      title: "UBS 2",
+      fields: [
+        "Anyagnyomás",
+        "Hőmérséklet",
+        "RAM A mennyisége",
+        "RAM B mennyisége",
+        "Szűrő előtti nyomás",
+        "Szűrő utáni nyomás",
+        "RAM A nyomás",
+        "RAM B nyomás"
+      ]
+    },
+    {
+      title: "UBC",
+      fields: [
+        "Anyagnyomás",
+        "Hőmérséklet",
+        "RAM A mennyisége",
+        "RAM B mennyisége",
+        "Szűrő előtti nyomás",
+        "Szűrő utáni nyomás",
+        "RAM A nyomás",
+        "RAM B nyomás"
+      ]
+    }
+  ];
+  // ────────────────────────────────────────────────────────────────
+
+  const root = document.getElementById('form-root');
+
+  sections.forEach((sec, si) => {
+    const card = document.createElement('div');
+    card.className = 'section-card';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'section-title';
+    titleEl.textContent = sec.title;
+    card.appendChild(titleEl);
+
+    sec.fields.forEach((f, fi) => {
+      const row = document.createElement('div');
+      row.className = 'field-row';
+
+      const label = document.createElement('span');
+      label.className = 'field-label';
+      label.textContent = f + ':';
+
+      const input = document.createElement('input');
+      input.className = 'field-input';
+      input.type = 'text';
+      input.inputMode = 'decimal';
+      input.placeholder = '—';
+      input.id = `s${si}_f${fi}`;
+
+      row.appendChild(label);
+      row.appendChild(input);
+      card.appendChild(row);
+    });
+
+    root.appendChild(card);
+  });
+
+  // Dátum alapértelmezés: mai nap
+  document.getElementById('datum').value = new Date().toISOString().split('T')[0];
+
+  // ── Sötét / világos mód ──────────────────────────────────────────
+  let dark = false;
+
+  function toggleDark() {
+    dark = !dark;
+    document.body.classList.toggle('dark', dark);
+    document.getElementById('modeIcon').textContent = dark ? '☀️' : '🌙';
+    document.getElementById('modeLabel').textContent = dark ? 'Világos' : 'Sötét';
+    localStorage.setItem('darkMode', dark ? '1' : '0');
+  }
+
+  // Legutóbbi mód visszatöltése
+  if (localStorage.getItem('darkMode') === '1') toggleDark();
+
+  // ── Mentés ──────────────────────────────────────────────────────
+  function mentes() {
+    const datum = document.getElementById('datum').value;
+    const muszak = document.getElementById('muszak').value;
+
+    let txt = `UBS/UBC adatlap\n`;
+    txt += `Dátum: ${datum}   Műszak: ${muszak}\n`;
+    txt += '═'.repeat(40) + '\n';
+
+    sections.forEach((sec, si) => {
+      txt += `\n${sec.title}\n`;
+      txt += '─'.repeat(30) + '\n';
+      sec.fields.forEach((f, fi) => {
+        const val = document.getElementById(`s${si}_f${fi}`).value.trim() || '—';
+        txt += `  ${f}: ${val}\n`;
+      });
+    });
+
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `adatlap_${datum}_${muszak}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Mentve! ✓');
+  }
+
+  // ── Törlés ──────────────────────────────────────────────────────
+  function torol() {
+    sections.forEach((sec, si) => {
+      sec.fields.forEach((_, fi) => {
+        document.getElementById(`s${si}_f${fi}`).value = '';
+      });
+    });
+    showToast('Mezők törölve');
+  }
+
+  // ── Toast értesítés ─────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+
+</body>
+</html>
